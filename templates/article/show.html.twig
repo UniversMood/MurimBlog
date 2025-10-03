@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.title }} - Murim Mania{% endblock %}
+
+{% block body %}
+<div class="main-content">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <article class="mb-5">
+                    <div class="mb-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('app_article_index') }}">Articles</a></li>
+                                <li class="breadcrumb-item active">{{ article.title }}</li>
+                            </ol>
+                        </nav>
+                    </div>
+
+                    <header class="mb-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <a href="{{ path('app_article_index', {category: article.category.id}) }}" 
+                               class="category-badge me-3" 
+                               style="background-color: {{ article.category.color }}">
+                                {{ article.category.name }}
+                            </a>
+                            <small class="text-muted">
+                                Publié le {{ article.createdAt|date('d/m/Y à H:i') }}
+                                {% if article.updatedAt != article.createdAt %}
+                                    • Modifié le {{ article.updatedAt|date('d/m/Y à H:i') }}
+                                {% endif %}
+                            </small>
+                        </div>
+                        
+                        <h1 class="display-5 fw-bold mb-3">{{ article.title }}</h1>
+                        
+                        <div class="article-meta mb-3">
+                            <i class="fas fa-user me-1"></i>Par <strong>{{ article.author.username }}</strong>
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-comments me-1"></i>{{ article.comments|length }} commentaire(s)
+                        </div>
+
+                        {% if app.user and (article.author == app.user or is_granted('ROLE_ADMIN')) %}
+                            <div class="mb-3">
+                                <a href="{{ path('app_article_edit', {id: article.id}) }}" 
+                                   class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="fas fa-edit me-1"></i>Modifier
+                                </a>
+                                <form method="post" action="{{ path('app_article_delete', {id: article.id}) }}" 
+                                      style="display: inline-block;" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                                    <button class="btn btn-outline-danger btn-sm">
+                                        <i class="fas fa-trash me-1"></i>Supprimer
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </header>
+
+                    <div class="article-content">
+                        {{ article.content|nl2br }}
+                    </div>
+                </article>
+
+                <!-- Section des commentaires -->
+                <div class="comment-section">
+                    <h3 class="mb-4">
+                        <i class="fas fa-comments me-2 text-warning"></i>
+                        Commentaires ({{ article.comments|length }})
+                    </h3>
+
+                    {% if app.user %}
+                        <div class="mb-4">
+                            <h5>Ajouter un commentaire</h5>
+                            {{ form_start(comment_form, {'attr': {'class': 'mb-4'}}) }}
+                                <div class="mb-3">
+                                    {{ form_widget(comment_form.content) }}
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-1"></i>Publier le commentaire
+                                </button>
+                            {{ form_end(comment_form) }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <a href="{{ path('app_login') }}">Connectez-vous</a> pour laisser un commentaire.
+                        </div>
+                    {% endif %}
+
+                    {% if article.comments is empty %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-comment fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">Aucun commentaire pour le moment.</p>
+                            {% if not app.user %}
+                                <p class="text-muted">Soyez le premier à commenter !</p>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        {% for comment in article.comments %}
+                            <div class="comment">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="comment-author">
+                                        <i class="fas fa-user me-1"></i>{{ comment.author.username }}
+                                    </div>
+                                    <div class="comment-date">
+                                        {{ comment.createdAt|date('d/m/Y à H:i') }}
+                                    </div>
+                                </div>
+                                <div class="comment-content">
+                                    {{ comment.content|nl2br }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sidebar">
+                    <h5><i class="fas fa-info-circle me-2 text-info"></i>Informations</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Catégorie :</strong> {{ article.category.name }}</li>
+                        <li><strong>Auteur :</strong> {{ article.author.username }}</li>
+                        <li><strong>Date de publication :</strong> {{ article.createdAt|date('d/m/Y') }}</li>
+                        <li><strong>Commentaires :</strong> {{ article.comments|length }}</li>
+                    </ul>
+
+                    <div class="mt-4">
+                        <h5><i class="fas fa-share-alt me-2 text-success"></i>Partager</h5>
+                        <div class="d-grid gap-2">
+                            <a href="https://twitter.com/intent/tweet?text={{ article.title|url_encode }}&url={{ url('app_article_show', {id: article.id})|url_encode }}" 
+                               target="_blank" class="btn btn-outline-info btn-sm">
+                                <i class="fab fa-twitter me-1"></i>Twitter
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url('app_article_show', {id: article.id})|url_encode }}" 
+                               target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fab fa-facebook me-1"></i>Facebook
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5><i class="fas fa-arrow-left me-2 text-warning"></i>Navigation</h5>
+                        <div class="d-grid gap-2">
+                            <a href="{{ path('app_article_index') }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-list me-1"></i>Tous les articles
+                            </a>
+                            <a href="{{ path('app_article_index', {category: article.category.id}) }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-tag me-1"></i>Articles de cette catégorie
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

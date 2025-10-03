@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - Murim Mania {% endblock %}
+
+{% block body %}
+<div class="main-content">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2 class="mb-0">
+                            <i class="fas fa-user-plus me-2 text-warning"></i>Inscription
+                        </h2>
+                        <p class="text-muted mt-2">Rejoignez la communauté Murim</p>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(registrationForm) }}
+                            <div class="mb-3">
+                                {{ form_label(registrationForm.username) }}
+                                {{ form_widget(registrationForm.username) }}
+                                {{ form_errors(registrationForm.username) }}
+                                <div class="form-text">Choisissez un nom d'utilisateur unique.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(registrationForm.email) }}
+                                {{ form_widget(registrationForm.email) }}
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(registrationForm.plainPassword) }}
+                                {{ form_widget(registrationForm.plainPassword) }}
+                                {{ form_errors(registrationForm.plainPassword) }}
+                                <div class="form-text">Minimum 6 caractères.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    {{ form_widget(registrationForm.agreeTerms) }}
+                                    {{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                </div>
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-user-plus me-1"></i>Créer mon compte
+                                </button>
+                            </div>
+                        {{ form_end(registrationForm) }}
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                            <p class="text-muted">Déjà un compte ?</p>
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-sign-in-alt me-1"></i>Se connecter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-info-circle me-2 text-info"></i>Pourquoi s'inscrire ?
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="mb-0">
+                                <li>Créer et publier vos propres articles</li>
+                                <li>Commenter les articles d'autres membres</li>
+                                <li>Participer aux discussions sur le Murim</li>
+                                <li>Partager vos connaissances martiales</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

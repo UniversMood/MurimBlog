@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ article.title }} - Blog Murim{% endblock %}
+
+{% block body %}
+<div class="main-content">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="mb-0">
+                            <i class="fas fa-edit me-2"></i>Modifier l'Article
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <nav aria-label="breadcrumb" class="mb-4">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('app_article_index') }}">Articles</a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('app_article_show', {id: article.id}) }}">{{ article.title }}</a></li>
+                                <li class="breadcrumb-item active">Modifier</li>
+                            </ol>
+                        </nav>
+
+                        {{ form_start(form) }}
+                            <div class="mb-3">
+                                {{ form_label(form.title) }}
+                                {{ form_widget(form.title) }}
+                                {{ form_errors(form.title) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.category) }}
+                                {{ form_widget(form.category) }}
+                                {{ form_errors(form.category) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.excerpt) }}
+                                {{ form_widget(form.excerpt) }}
+                                {{ form_errors(form.excerpt) }}
+                                <div class="form-text">Un court résumé de votre article (optionnel).</div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.content) }}
+                                {{ form_widget(form.content) }}
+                                {{ form_errors(form.content) }}
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    {{ form_widget(form.published) }}
+                                    {{ form_label(form.published, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                </div>
+                                {{ form_errors(form.published) }}
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <a href="{{ path('app_article_show', {id: article.id}) }}" class="btn btn-outline-secondary me-2">
+                                        <i class="fas fa-arrow-left me-1"></i>Retour
+                                    </a>
+                                    <a href="{{ path('app_article_index') }}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-list me-1"></i>Tous les articles
+                                    </a>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>Sauvegarder les Modifications
+                                </button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Article créé le :</strong> {{ article.createdAt|date('d/m/Y à H:i') }}
+                        {% if article.updatedAt != article.createdAt %}
+                            <br><strong>Dernière modification :</strong> {{ article.updatedAt|date('d/m/Y à H:i') }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

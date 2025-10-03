@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Murim Mania{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚔️</text></svg>">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+            :root {
+                --murim-red: #dc2626;
+                --murim-gold: #f59e0b;
+                --murim-dark: #1f2937;
+                --murim-light: #f8fafc;
+            }
+            
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+                min-height: 100vh;
+                color: #333;
+            }
+            
+            .navbar {
+                background: rgba(31, 41, 55, 0.95) !important;
+                backdrop-filter: blur(10px);
+                border-bottom: 2px solid var(--murim-gold);
+            }
+            
+            .navbar-brand {
+                color: var(--murim-gold) !important;
+                font-weight: bold;
+                font-size: 1.5rem;
+            }
+            
+            .navbar-nav .nav-link {
+                color: #e5e7eb !important;
+                transition: color 0.3s ease;
+            }
+            
+            .navbar-nav .nav-link:hover {
+                color: var(--murim-gold) !important;
+            }
+            
+            .main-content {
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                margin: 2rem 0;
+                overflow: hidden;
+            }
+            
+            .hero-section {
+                background: linear-gradient(135deg, var(--murim-red) 0%, #b91c1c 100%);
+                color: white;
+                padding: 4rem 0;
+                text-align: center;
+            }
+            
+            .hero-section h1 {
+                font-size: 3rem;
+                font-weight: bold;
+                margin-bottom: 1rem;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            }
+            
+            .hero-section p {
+                font-size: 1.2rem;
+                opacity: 0.9;
+            }
+            
+            .card {
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                overflow: hidden;
+            }
+            
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            }
+            
+            .card-header {
+                background: linear-gradient(135deg, var(--murim-gold) 0%, #d97706 100%);
+                color: white;
+                border: none;
+                font-weight: bold;
+            }
+            
+            .btn-primary {
+                background: linear-gradient(135deg, var(--murim-red) 0%, #b91c1c 100%);
+                border: none;
+                border-radius: 25px;
+                padding: 0.75rem 2rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(220, 38, 38, 0.3);
+            }
+            
+            .btn-outline-primary {
+                color: var(--murim-red);
+                border-color: var(--murim-red);
+                border-radius: 25px;
+                padding: 0.75rem 2rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-outline-primary:hover {
+                background: var(--murim-red);
+                border-color: var(--murim-red);
+                transform: translateY(-2px);
+            }
+            
+            .category-badge {
+                border-radius: 20px;
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: white;
+                text-decoration: none;
+                display: inline-block;
+                transition: all 0.3s ease;
+            }
+            
+            .category-badge:hover {
+                transform: scale(1.05);
+                color: white;
+                text-decoration: none;
+            }
+            
+            .alert {
+                border: none;
+                border-radius: 10px;
+                padding: 1rem 1.5rem;
+            }
+            
+            .alert-success {
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+            }
+            
+            .alert-danger {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                color: white;
+            }
+            
+            .form-control {
+                border-radius: 10px;
+                border: 2px solid #e5e7eb;
+                padding: 0.75rem 1rem;
+                transition: border-color 0.3s ease;
+            }
+            
+            .form-control:focus {
+                border-color: var(--murim-gold);
+                box-shadow: 0 0 0 0.2rem rgba(245, 158, 11, 0.25);
+            }
+            
+            .sidebar {
+                background: #f8fafc;
+                border-radius: 15px;
+                padding: 2rem;
+                height: fit-content;
+            }
+            
+            .sidebar h5 {
+                color: var(--murim-dark);
+                font-weight: bold;
+                margin-bottom: 1.5rem;
+            }
+            
+            .list-group-item {
+                border: none;
+                background: transparent;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            
+            .list-group-item:last-child {
+                border-bottom: none;
+            }
+            
+            .footer {
+                background: var(--murim-dark);
+                color: #e5e7eb;
+                padding: 3rem 0;
+                margin-top: 4rem;
+            }
+            
+            .article-meta {
+                color: #6b7280;
+                font-size: 0.875rem;
+            }
+            
+            .comment-section {
+                background: #f8fafc;
+                border-radius: 15px;
+                padding: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .comment {
+                background: white;
+                border-radius: 10px;
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+                border-left: 4px solid var(--murim-gold);
+            }
+            
+            .comment-author {
+                font-weight: bold;
+                color: var(--murim-red);
+            }
+            
+            .comment-date {
+                color: #6b7280;
+                font-size: 0.875rem;
+            }
+        </style>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('app_home') }}">
+                    <i class="fas fa-dragon me-2"></i>Murim Mania
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_home') }}">
+                                <i class="fas fa-home me-1"></i>Accueil
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_article_index') }}">
+                                <i class="fas fa-scroll me-1"></i>Articles
+                            </a>
+                        </li>
+                        {% if app.user %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_article_new') }}">
+                                    <i class="fas fa-plus me-1"></i>Nouvel Article
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <ul class="navbar-nav">
+                        {% if app.user %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user me-1"></i>{{ app.user.username }}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">
+                                        <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                                    </a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_login') }}">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Connexion
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_register') }}">
+                                    <i class="fas fa-user-plus me-1"></i>Inscription
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div style="padding-top: 80px;">
+            <div class="container">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-dragon me-2"></i>Murim Mania</h5>
+                        <p>Explorez les mystères du monde martial et découvrez les secrets de la cultivation.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p>&copy; 2025 Murim Mania - Blog Murim</p>
+                        <p><small>Créé avec passion pour le Murim</small></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
